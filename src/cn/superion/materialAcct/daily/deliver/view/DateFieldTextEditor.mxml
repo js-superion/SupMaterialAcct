@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<controls:DateFieldText xmlns:fx="http://ns.adobe.com/mxml/2009"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:controls="cn.superion.base.components.controls.*"
+			  creationComplete="textinput1_creationCompleteHandler(event)"
+			  change="textinput1_changeHandler(event)"
+			  maxChars="7">
+	<fx:Script>
+		<![CDATA[
+			import cn.superion.base.util.DateUtil;
+			
+			import mx.controls.DataGrid;
+			import mx.controls.DateField;
+			import mx.events.FlexEvent;
+
+			protected function textinput1_changeHandler(event:Event):void
+			{
+				changeValue(event)
+			}
+
+			protected function changeValue(event:Event):void
+			{
+				var dataField:String=event.currentTarget.listData.dataField
+				data[dataField] = DateField.stringToDate(this.text,'YYYY-MM-DD');
+				data[dataField] = data[dataField]
+				DataGrid(this.owner).invalidateList();
+			}
+
+			protected function textinput1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if(this.data.invoiceDate == null){
+					this.selectedDate = null;
+				}else{
+					this.selectedDate = this.data.invoiceDate;
+				}
+				changeValue(event);
+			}
+
+		]]>
+	</fx:Script>
+</controls:DateFieldText>
+

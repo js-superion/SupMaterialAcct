@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   width="704"
+				   height="338"
+				   borderVisible="false"
+				   backgroundImage="@Embed(source='assets/images/bg/materialAcct_login.jpg')"
+				   xmlns:login="cn.superion.materialAcct.login.*"
+				   creationComplete="init()">
+
+	<fx:Script source="Loginas.as"/>
+
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="inputTypeCode"/>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<mx:Form id="loginFrom"
+			 x="380"
+			 y="81"
+			 width="304"
+			 height="217"
+			 verticalGap="5">
+		<mx:FormItem id="userCodeTxt"
+					 label="用户名">
+			<s:TextInput id="userCode"
+						 width="200"
+						 focusOut="userCode_focusOutHandler(event)"
+						 keyDown="keyDownCtrl(event,password)"
+						 fontSize="15"/>
+		</mx:FormItem>
+
+		<mx:FormItem id="passwordTxt"
+					 label="密　码">
+			<s:TextInput id="password"
+						 width="200"
+						 displayAsPassword="true"
+						 keyDown="keyDownCtrl(event,unitsDdlb)"
+						 fontSize="15"/>
+		</mx:FormItem>
+		<mx:FormItem id="unitsTxt"
+					 label="单　位">
+			<s:DropDownList id="unitsDdlb"
+							width="200"
+							height="25"
+							labelField="unitsName"
+							keyDown="keyDownCtrl(event,rolesDdlb)">
+			</s:DropDownList>
+		</mx:FormItem>
+		<mx:FormItem id="Txt"
+					 label="角　色">
+			<s:DropDownList id="rolesDdlb"
+							width="200"
+							height="25"
+							labelField="roleName"
+							keyDown="keyDownCtrl(event,checkCode)">
+			</s:DropDownList>
+		</mx:FormItem>
+
+		<s:HGroup width="100%">
+			<mx:FormItem id="checkCodeTxt"
+						 label="验证码">
+				<s:TextInput id="checkCode"
+							 width="103"
+							 keyDown="keyDownCtrl(event,loginBt)"
+							 fontSize="15"/>
+			</mx:FormItem>
+			<login:LoginCheckCode id="vcheckCode"
+								  x="567"
+								  y="216"
+								  width="93"
+								  fontSize="20"
+								  height="24"/>
+		</s:HGroup>
+		<mx:FormItem width="100%"
+					 label="助记码"
+					 indicatorGap="10"
+					 direction="horizontal">
+			<s:RadioButton id="fiveInputType"
+						   label="五笔码"
+						   groupName="inputTypeCode"
+						   selected="true"/>
+			<s:RadioButton id="phoInputType"
+						   label="拼音码"
+						   groupName="inputTypeCode"/>
+		</mx:FormItem>
+
+	</mx:Form>
+	<mx:LinkButton x="524"
+				   y="288"
+				   id="loginBt"
+				   icon="@Embed(source='assets/images/button/btlogin64.png')"
+				   click="loginBt_clickHandler(event)"
+				   keyDown="loginBt_clickHandler(event)"/>
+	<mx:LinkButton x="598"
+				   y="288"
+				   id="exitBt"
+				   icon="@Embed(source='assets/images/button/btexit64.png')"
+				   click="exitBt_clickHandler(event)"/>
+</s:BorderContainer>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   minWidth="955"
+			   minHeight="600"
+			   xmlns:main="cn.superion.materialAcct.main.*"
+			   creationComplete="inita(event)">
+	<fx:Style source="assets/css/myMain.css"/>
+	<fx:Script>
+		<![CDATA[
+			import cn.superion.base.config.AppInfo;
+			import cn.superion.dataDict.DictWinShower;
+			import cn.superion.materialAcct.login.Login;
+			import cn.superion.vo.material.MaterialChangePriceDetail;
+			import cn.superion.vo.material.MaterialChangePriceMaster;
+			import cn.superion.vo.material.MaterialRdsAcctMaster;
+			import cn.superion.vo.material.MaterialRdsDetail;
+			import cn.superion.vo.material.MaterialRdsMaster;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			private var _materialRdsMaster:MaterialRdsMaster=new MaterialRdsMaster();
+			private var _materialAcctMaster:MaterialRdsAcctMaster=new MaterialRdsAcctMaster();
+			private var _materialRdsDetail:MaterialRdsDetail=new MaterialRdsDetail();
+			private var _materialchanMaster:MaterialChangePriceMaster=new MaterialChangePriceMaster();
+			private var _materialchandetail:MaterialChangePriceDetail=new MaterialChangePriceDetail();
+			protected function inita(event:FlexEvent):void
+			{
+				AppInfo.APP_CODE="892";
+				AppInfo.APP_NAME="医院物资核算系统";
+				AppInfo.moduleType="1";
+				//是否开发模式	
+				AppInfo.APP_MODE=false;
+
+				//初始化，否则打开窗口会出错
+				var dictShower:DictWinShower=null;
+
+				//0 -- 小图标   1 -- 大图标
+				AppInfo.APP_MENU_STYLE="1";
+
+				this.pageTitle=AppInfo.APP_NAME;
+
+				var login:Login=Login(PopUpManager.createPopUp(this, Login, false));
+				PopUpManager.centerPopUp(login);
+				ExternalInterface.call("setFlexFocus");
+//				initTimer();
+				//加载weboffice组件
+				ExternalInterface.call("loadInitDoc")
+
+			}
+		]]>
+	</fx:Script>
+	<main:MainWin id="mainWin"
+				  x="0"
+				  y="0"
+				  visible="false">
+	</main:MainWin>
+
+</s:Application>

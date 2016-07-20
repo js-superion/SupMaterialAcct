@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:s="library://ns.adobe.com/flex/spark"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   layout="vertical"
+		   height="100%"
+		   width="100%"
+		   horizontalScrollPolicy="auto"
+		   backgroundColor="#E2E8E8"
+		   xmlns:controls="cn.superion.base.components.controls.*"
+		   creationComplete="doInit()"
+		   xmlns:util="cn.superion.materialAcct.util.*">
+
+	<fx:Script source="ModDeliverListas.as"/>
+	<s:Scroller id="scrol"
+				width="100%"
+				height="100%">
+		<s:VGroup id="vg"
+				  gap="0"
+				  height="100%"
+				  width="100%">
+			<util:MainToolBar id="tbarMain"
+							  width="100%"
+							  printClick="printClickHandler(event)"
+							  expClick="expClickHandler(event)"
+							  queryClick="tbarMain_queryClickHandler(event)"
+							  exitClick="tbarMain_exitClickHandler(event)"/>
+			<controls:BarSubTitle title="出库报告单查询"
+								  height="28"/>
+			<s:BorderContainer id="bord"
+							   width="100%"
+							   height="100%"
+							   backgroundColor="#E2E8E8">
+				<s:layout>
+					<s:VerticalLayout verticalAlign="top"
+									  paddingLeft="5"
+									  paddingTop="5"
+									  paddingRight="5"
+									  paddingBottom="5"/>
+				</s:layout>
+				<s:HGroup width="100%"
+						  height="100%">
+					<controls:PageGrid id="dgMasterList"
+									   width="320"
+									   height="100%"
+									   hasRowNo="false"
+									   hasHorizonScrollBar="true"
+									   itemClick="dgMasterList_clickHandler(event)">
+						<controls:columns>
+							<mx:DataGridColumn headerText="记账日期"
+											   width="80"
+											   dataField="accountDate"
+											   textAlign="left"/>
+							<mx:DataGridColumn headerText="仓库"
+											   width="95"
+											   dataField="storageName"
+											   textAlign="left"/>
+							<mx:DataGridColumn headerText="部门"
+											   width="180"
+											   dataField="deptName"
+											   textAlign="left"/>
+							<mx:DataGridColumn headerText="记账单号"
+											   width="120"
+											   dataField="autoId"
+											   textAlign="left"/>
+							
+							<mx:DataGridColumn headerText="起始出库日期"
+											   width="90"
+											   dataField="billDate1"
+											   textAlign="left"
+											   visible="false"/>
+							<mx:DataGridColumn headerText="终止出库日期"
+											   width="90"
+											   dataField="billDate2"
+											   textAlign="left"
+											   visible="false"/>
+							<mx:DataGridColumn headerText="最小出库号"
+											   width="90"
+											   dataField="minRdBillNo"
+											   textAlign="left"
+											   visible="false"/>
+							<mx:DataGridColumn headerText="最大出库号"
+											   width="90"
+											   dataField="maxRdBillNo"
+											   textAlign="left"
+											   visible="false"/>
+							<mx:DataGridColumn headerText="记账人"
+											   width="80"
+											   labelFunction="labFun"
+											   dataField="accounter"
+											   textAlign="left"/>
+
+						</controls:columns>
+					</controls:PageGrid>
+					<s:VGroup width="100%"
+							  height="100%">
+						<mx:HBox width="221"
+								 verticalAlign="middle"
+								 styleName="requiredFormItem">
+							<s:Label text="出库号"/>
+							<s:ComboBox id="billNo"
+										width="100%"
+										height="25"
+										labelField="rdBillNo"
+										change="billNo_changeHandler(event)"/>
+						</mx:HBox>
+						
+						<controls:SuperDataGrid hasRowNo="false"
+												width="100%"
+												height="100%"
+												id="gdItems"
+												sumField="{['amount','wholeSaleMoney','retailMoney']}"
+												sumLableField="rowNo"
+												sumRowLabelText="合计"
+												styleName="dataGrid"
+												horizontalScrollPolicy="on"
+												format="{[,,,,,'0.00','0.00','0.00','0.00','0.00']}">
+							<controls:columns>
+								<mx:DataGridColumn dataField="rdBillNo"
+												   headerText="出库号"
+												   width="110"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="materialCode"
+												   headerText="物资编码"
+												   width="110"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="materialName"
+												   headerText="物资名称"
+												   width="220"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="materialSpec"
+												   headerText="规格型号"
+												   width="130"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="materialUnits"
+												   headerText="单位"
+												   width="70"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="amount"
+												   headerText="数量"
+												   width="80"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="wholeSalePrice"
+												   headerText="批发价"
+												   width="80"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="wholeSaleMoney"
+												   headerText="批发价金额"
+												   width="100"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="retailPrice"
+												   headerText="零售价"
+												   width="80"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="retailMoney"
+												   headerText="零售价金额"
+												   width="100"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="factoryCode"
+												   headerText="生产厂家"
+												   width="180"
+												   labelFunction="labelFun"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="batch"
+												   headerText="批号"
+												   width="100"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="availDate"
+												   headerText="有效期止"
+												   width="100"
+												   textAlign="left"/>
+								<mx:DataGridColumn dataField="detailRemark"
+												    headerText="备注"
+													width="100"
+													textAlign="left"/>
+							</controls:columns>
+						</controls:SuperDataGrid>
+					</s:VGroup>
+					
+				</s:HGroup>
+				
+			</s:BorderContainer>
+			
+		</s:VGroup>
+	</s:Scroller>
+</mx:Module>

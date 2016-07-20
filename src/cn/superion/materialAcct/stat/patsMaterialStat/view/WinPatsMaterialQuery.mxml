@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   backgroundColor="0xE2E8E8"
+			   width="500"
+			   height="480"
+			   title="病人使用材料查询"
+			   close="PopUpManager.removePopUp(this)"
+			   xmlns:controls="cn.superion.base.components.controls.*"
+			   creationComplete="doInit()">
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10"
+						  paddingRight="10"
+						  paddingTop="10"
+						  paddingBottom="10"/>
+	</s:layout>
+
+
+	<fx:Script source="WinPatsMaterialQueryas.as"/>
+
+
+	<mx:TabNavigator height="100%"
+					 width="100%"
+					 paddingBottom="15"
+					 paddingTop="15"
+					 paddingLeft="15"
+					 paddingRight="15"
+					 backgroundColor="#E2E8E8">
+		<s:NavigatorContent id="queryCondition"
+							label="查询条件"
+							width="100%"
+							height="100%">
+			<s:VGroup id="queryPanel"
+					  width="100%"
+					  height="100%">
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="单    位"
+							 width="75"/>
+					<s:ComboBox id="unitsCode"
+								width="100%"
+								labelField="unitsName"
+								requireSelection="true"
+								selectedIndex="0"
+								keyUp="queryIcon_keyUpHandler(event,materialCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="物资名称"
+							 width="75"/>
+					<controls:TextInputIcon id="materialCode"
+											width="100%"
+											queryIconClick="materialCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,barCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="医院条码"
+							 width="75"/>
+					<s:TextInput id="barCode"
+								 width="100%"
+								 keyUp="toNextControl(event,salerCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="供 应 商"
+							 width="75"/>
+					<controls:TextInputIcon id="salerCode"
+											width="100%"
+											queryIconClick="salerCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,factoryCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="生产厂家"
+							 width="75"/>
+					<controls:TextInputIcon id="factoryCode"
+											width="100%"
+											queryIconClick="factoryCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,patientId)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="住 院 号"
+							 width="75"/>
+					<s:TextInput id="patientId"
+								 width="100%"
+								 keyUp="toNextControl(event,deptCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="科    别"
+							 width="75"/>
+					<controls:TextInputIcon id="deptCode"
+											width="100%"
+											queryIconClick="deptCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,wardCode)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="病    区"
+							 width="75"/>
+					<controls:TextInputIcon id="wardCode"
+											width="100%"
+											queryIconClick="wardCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,doctor)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="医    生"
+							 width="75"/>
+					<controls:TextInputIcon id="doctor"
+											width="100%"
+											queryIconClick="doctor_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,doctorGroup)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="医生组别"
+							 width="75"/>
+					<controls:TextInputIcon id="doctorGroup"
+											width="100%"
+											queryIconClick="doctorGroup_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,btAccountDate)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:CheckBox id="btAccountDate"
+								label="收费日期"
+								width="75"
+								keyUp="toNextControl(event,beginAccountDate)"/>
+					<mx:DateField id="beginAccountDate"
+								  width="100%"
+								  enabled="{btAccountDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  editable="true"
+								  selectedDate="{beginAccountDate.selectedDate==null?beginAccountDate.selectedDate=new Date():beginAccountDate.selectedDate}"
+								  selectableRange="{{rangeEnd:endAccountDate.selectedDate}}"
+								  keyUp="toNextControl(event,endAccountDate)"/>
+					<mx:DateField id="endAccountDate"
+								  width="100%"
+								  enabled="{btAccountDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  editable="true"
+								  selectedDate="{endAccountDate.selectedDate==null?endAccountDate.selectedDate=new Date():endAccountDate.selectedDate}"
+								  selectableRange="{{rangeStart:beginAccountDate.selectedDate}}"
+								  keyUp="toNextControl(event,factoryCode)"/>
+				</s:HGroup>
+			</s:VGroup>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+
+	<s:HGroup width="100%"
+			  height="31"
+			  horizontalAlign="right"
+			  verticalAlign="middle">
+		<mx:LinkButton id="btConfirm"
+					   label=" 确 定 "
+					   skin="mx.skins.halo.ButtonSkin"
+					   buttonMode="true"
+					   fontSize="12"
+					   width="86"
+					   height="26"
+					   icon="@Embed('/assets/images/button/confirm20.png')"
+					   click="btQuery_clickHandler()"/>
+		<mx:LinkButton id="cancel"
+					   label=" 取 消 "
+					   skin="mx.skins.halo.ButtonSkin"
+					   buttonMode="true"
+					   fontSize="12"
+					   width="86"
+					   height="26"
+					   icon="@Embed('/assets/images/button/return20.png')"
+					   click="PopUpManager.removePopUp(this)"/>
+	</s:HGroup>
+
+
+</s:TitleWindow>

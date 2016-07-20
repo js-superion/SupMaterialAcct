@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:CheckBox xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="checkbox1_creationCompleteHandler(event)"
+			 change="checkbox1_changeHandler(event)"
+			 selected="{data.isSelected}">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ListCollectionView;
+			import mx.controls.DataGrid;
+			import mx.events.FlexEvent;
+			
+			protected function checkbox1_changeHandler(event:Event):void
+			{
+				if(parentDocument._isSelected==false)
+				{
+					if(data.invoiceNo || data.isGive == '1'){
+//						for each (var item:Object in parentDocument.gdItems.dataProvider){
+//							if (item.invoiceNo){// == data.invoiceNo
+//								item.isSelected=this.selected;
+//								//byzcl试运行方法
+////								for each (var item1:Object in parentDocument.gdItems.dataProvider){
+////									if(item1.materialId == data.materialId && item1.mainAutoId == data.mainAutoId){
+////										item1.invoiceNo=data.invoiceNo;
+////									}
+////								}
+//							    	           
+//							}
+//						}
+						if(data.isSelected){
+							this.selected = false;
+							data.isSelected = false;
+						}else{
+							this.selected = true;
+							data.isSelected = true;
+						}
+						
+
+					}else{
+						this.selected = false;
+						data.isSelected = false;
+					}
+				}
+				else
+				{
+					data.isSelected=this.selected;
+				}
+//				ListCollectionView(parentDocument.gdItems.dataProvider).itemUpdated(item, "isSelected");
+				DataGrid(parentDocument.gdItems).invalidateList();
+			}
+			
+			
+			protected function checkbox1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data.notData){
+					this.visible=false;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+</mx:CheckBox>

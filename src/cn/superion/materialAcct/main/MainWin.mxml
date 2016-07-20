@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:s="library://ns.adobe.com/flex/spark"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   width="100%"
+		   height="100%"
+		   xmlns:view="cn.superion.materialAcct.main.view.*"
+		   show="init()">
+	<fx:Script>
+		<![CDATA[
+			import cn.superion.base.config.AppInfo;
+			import cn.superion.base.util.RemoteUtil;
+			import cn.superion.materialAcct.main.view.MainMenuItem;
+			import cn.superion.materialAcct.main.view.MainMenuItemH;
+			import cn.superion.materialAcct.util.ReportParameter;
+			import cn.superion.vo.center.config.CdSysParam;
+			
+			import mx.collections.ArrayCollection;
+			import mx.rpc.remoting.RemoteObject;
+
+			//窗口初始化
+			protected function init():void
+			{
+				// TODO Auto-generated method stub		
+				createMenuItem(menuDaily);
+				fillMenu('01', menuDaily);
+				getSysParam()
+			}
+			
+			/**
+			 * 获取系统参数 2011.04.18
+			 */
+			private function getSysParam():void
+			{
+				var ro:RemoteObject=RemoteUtil.getRemoteObject("centerSysParamImpl", function(rev:Object):void
+				{
+					if (rev.data.length > 0)
+					{
+						fillSysParam(rev.data);
+					}
+				});
+				ro.findSysParamListByApplication(AppInfo.APP_CODE);
+			}
+			/**
+			 * 填充当前系统参数
+			 */
+			private function fillSysParam(fItem:Object):void
+			{
+				for each (var param:CdSysParam in fItem)
+				{
+					if (param.paraCode == '0903')
+					{
+						ReportParameter.reportPrintHeight_in=param.paraValue;
+					}
+					if (param.paraCode == '0904')
+					{
+						ReportParameter.reportPrintHeight_out=param.paraValue;
+					}
+				}
+			}
+			private function createMenuItem(menuTab:List):void
+			{
+				var menuClass:Class;
+				if (AppInfo.APP_MENU_STYLE == '0')
+				{
+					//小图标
+					menuClass=MainMenuItemH;
+				}
+				else
+				{
+					//大图标
+					menuClass=MainMenuItem;
+				}
+				menuTab.itemRenderer=new ClassFactory(menuClass);
+			}
+
+			//填充当前菜单
+			private function fillMenu(fmenuCode:String, fsubMenuCon:List):void
+			{
+				var subMenus:Array=getSubMenusFromMenuCode(fmenuCode);
+				fsubMenuCon.dataProvider=new ArrayCollection(subMenus);
+			}
+
+			private function getSubMenusFromMenuCode(fmenuCode:String):Array
+			{
+				var subMenus:Array=[];
+				var menus:ArrayCollection=AppInfo.currentUserInfo.dataViews;
+				for each (var menuItem:Object in menus)
+				{
+					var lstrMenuNo:String=menuItem.menuNo;
+					if (lstrMenuNo.length == 4 && lstrMenuNo.substr(0, 2) == fmenuCode)
+					{
+						subMenus.push(menuItem);
+					}
+				}
+				return subMenus;
+			}
+
+			//点击中间收缩菜单区
+			protected function mid_left_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (menuPanel.width == 0)
+				{
+					menuPanel.width=197
+					menuPanel.visible=true
+					mid_left.source="assets/images/bg/emrOut_menu_left.png"
+				}
+				else
+				{
+					menuPanel.width=0
+					menuPanel.visible=false
+					mid_left.source="assets/images/bg/emrOut_menu_right.png"
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:VGroup width="100%"
+			  height="100%"
+			  gap="0">
+		<s:HGroup width="100%"
+				  gap="0">
+			<mx:Image source="assets/images/bg/materialAcct_main_01.png"/>
+			<mx:Image source="assets/images/bg/materialAcct_main_02.png"
+					  maintainAspectRatio="false"
+					  width="100%"/>
+			<mx:Image source="assets/images/bg/materialAcct_main_03.png"
+					  maintainAspectRatio="false"/>
+		</s:HGroup>
+		<s:BorderContainer y="0"
+						   width="100%"
+						   height="36"
+						   backgroundImage="@Embed(source='assets/images/bg/emrOut_mid_menu.jpg')"
+						   backgroundImageFillMode="scale"
+						   backgroundAlpha="0.8"
+						   borderStyle="inset"
+						   borderVisible="false">
+			<view:MainWinMid1 id="toolBar"
+							  x="0"
+							  y="0"
+							  width="100%">
+			</view:MainWinMid1>
+
+			<view:MainWinMid2 id="topMenuBar"
+							  y="0"
+							  width="335"
+							  right="20">
+			</view:MainWinMid2>
+		</s:BorderContainer>
+		<!-- 菜单部分 -->
+		<s:HGroup x="0"
+				  y="0"
+				  width="100%"
+				  height="100%"
+				  gap="0">
+			<s:BorderContainer id="menuPanel"
+							   width="197"
+							   height="100%">
+				<mx:Accordion x="0"
+							  y="0"
+							  width="100%"
+							  height="100%"
+							  paddingLeft="-6"
+							  borderVisible="false">
+					<!-- 3.2	日常工作 -->
+					<s:NavigatorContent label="日常工作"
+										width="100%"
+										height="100%"
+										contentCreationComplete="createMenuItem(menuDaily)"
+										icon="@Embed(source='assets/images/menu/m_materialAcct_01.png')">
+						<s:List id="menuDaily"
+								width="197"
+								height="100%"
+								left="0"
+								borderVisible="false"
+								rollOverColor="#FFFFFF"
+								selectionColor="#FFFFFF">
+						</s:List>
+					</s:NavigatorContent>
+					<!-- 3.3	查询统计 -->
+					<s:NavigatorContent label="查询统计"
+										width="100%"
+										height="100%"
+										contentCreationComplete="createMenuItem(menStat)"
+										icon="@Embed(source='assets/images/menu/m_materialAcct_02.png')">
+						<s:BorderContainer width="197"
+										   height="100%"
+										   creationComplete="fillMenu('02',menStat)">
+							<s:List id="menStat"
+									width="197"
+									height="100%"
+									left="0"
+									borderVisible="false"
+									rollOverColor="#FFFFFF"
+									selectionColor="#FFFFFF">
+							</s:List>
+						</s:BorderContainer>
+					</s:NavigatorContent>
+				</mx:Accordion>
+			</s:BorderContainer>
+			<!-- 收缩区域 -->
+			<s:VGroup width="20"
+					  height="100%"
+					  gap="0">
+				<mx:Image source="assets/images/bg/emrOut_mid_bg.jpg"
+						  maintainAspectRatio="false"
+						  height="100%"/>
+				<mx:Image id="mid_left"
+						  height="67"
+						  left="0"
+						  verticalCenter="0"
+						  useHandCursor="true"
+						  buttonMode="true"
+						  maintainAspectRatio="false"
+						  source="assets/images/bg/emrOut_menu_left.png"
+						  click="mid_left_clickHandler(event)"/>
+				<mx:Image source="assets/images/bg/emrOut_mid_bg.jpg"
+						  maintainAspectRatio="false"
+						  height="100%"/>
+
+			</s:VGroup>
+			<!-- 加载模块区域 -->
+			<s:BorderContainer id="modPanel"
+							   width="100%"
+							   height="100%"
+							   borderVisible="false">
+				<mx:ModuleLoader id="mainFrame"
+								 x="0"
+								 y="0"
+								 width="100%"
+								 height="100%"
+								 url="cn/superion/materialAcct/main/view/ModMainRight.swf"
+								 visible="true">
+				</mx:ModuleLoader>
+			</s:BorderContainer>
+		</s:HGroup>
+	</s:VGroup>
+</mx:Canvas>

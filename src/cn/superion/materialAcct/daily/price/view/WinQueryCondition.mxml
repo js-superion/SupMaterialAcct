@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+调价记录单列表模块  查询窗体
+author:周作建  2011.06.01
+checked by
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="500"
+			   height="342"
+			   backgroundColor="0xE2E8E8"
+			   title="调价记录单查询"
+			   close="closeWin()"
+			   xmlns:controls="cn.superion.base.components.controls.*">
+	<fx:Script source="WinQueryConditionas.as"/>
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10"
+						  paddingRight="10"
+						  paddingTop="10"/>
+	</s:layout>
+	<!-- 查询条件区 -->
+	<mx:TabNavigator width="478"
+					 height="256"
+					 paddingBottom="15"
+					 paddingTop="15"
+					 paddingLeft="15"
+					 paddingRight="15"
+					 backgroundColor="0xE2E8E8">
+		<s:NavigatorContent width="450"
+							height="361"
+							label="查询条件">
+			<s:VGroup id="receiveOtherQuery"
+					  width="100%"
+					  height="100%">
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="调价单号"
+							 width="75"/>
+					<s:TextInput id="beginBillNo"
+								 width="100%"
+								 maxChars="30"
+								 restrict="0-9"
+								 keyUp="toNextControl(event,endBillNo)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<s:TextInput id="endBillNo"
+								 width="100%"
+								 maxChars="30"
+								 restrict="0-9"
+								 keyUp="toNextControl(event,chkBillDate)"/>
+					
+				</s:HGroup>
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<mx:FormItem direction="horizontal"
+								 width="100%"
+								 indicatorGap="0">
+						<s:CheckBox id="chkBillDate"
+									label="调价日期"
+									width="75"
+									keyUp="toNextControl(event,beginBillDate)"/>
+						<mx:DateField id="beginBillDate"
+									  width="50%"
+									  enabled="{chkBillDate.selected}"
+									  formatString="YYYY-MM-DD"
+									  enterFrame="{beginBillDate.selectedDate==null?beginBillDate.selectedDate=new Date():beginBillDate.selectedDate}"
+									  selectableRange="{{rangeEnd:endBillDate.selectedDate}}"
+									  showToday="true"
+									  keyUp="toNextControl(event,endBillDate)"/>
+						<mx:FormItem label="-"
+									 labelWidth="10"
+									 width="50%"
+									 horizontalGap="0">
+							<mx:DateField id="endBillDate"
+										  width="100%"
+										  enabled="{chkBillDate.selected}"
+										  formatString="YYYY-MM-DD"
+										  enterFrame="{endBillDate.selectedDate==null?endBillDate.selectedDate=new Date():endBillDate.selectedDate}"
+										  selectableRange="{{rangeStart:beginBillDate.selectedDate, rangeEnd:new Date()}}"
+										  showToday="true"
+										  keyUp="toNextControl(event,beginMaterialClass)"/>
+						</mx:FormItem>
+					</mx:FormItem>
+				</s:HGroup>
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+
+					<s:Label text="物资分类"
+							 width="75"/>
+					<controls:TextInputIcon id="beginMaterialClass"
+											width="100%"
+											maxChars="30"
+											keyUp="toNextControl(event,endMaterialClass)"
+											queryIconClick="beginMaterialClass_queryIconClickHandler(event)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<controls:TextInputIcon id="endMaterialClass"
+											width="100%"
+											maxChars="30"
+											keyUp="toNextControl(event,beginMaterialCode)"
+											queryIconClick="endMaterialClass_queryIconClickHandler(event)"/>
+				</s:HGroup>
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="物资编码"
+							 width="75"/>
+					<s:TextInput id="beginMaterialCode"
+								 width="100%"
+								 maxChars="30"
+								 restrict="0-9"
+								 keyUp="toNextControl(event,endMaterialNo)"
+								 />
+					<s:Label text="-"
+							 width="8"/>
+					<s:TextInput id="endMaterialNo"
+								 width="100%"
+								 maxChars="30"
+								 restrict="0-9"
+								 keyUp="toNextControl(event,materialName)"/>
+					
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="物资名称"
+							 width="75"/>
+					<controls:TextInputIcon id="materialName"
+											width="100%"
+											maxChars="20"
+											keyUp="toNextControl(event,chkMakeDate)"
+											queryIconClick="materialName_queryIconClickHandler(event)"/>
+				</s:HGroup>
+				
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="制单人"
+							 width="75"/>
+					<controls:TextInputIcon id="maker"
+											width="100%"
+											maxChars="20"
+											keyUp="toNextControl(event,chkMakeDate)"
+											queryIconClick="maker_queryIconClickHandler(event)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<mx:FormItem direction="horizontal"
+								 width="100%"
+								 indicatorGap="0">
+						<s:CheckBox id="chkMakeDate"
+									label="制单日期"
+									width="75"
+									keyUp="toNextControl(event,beginMakeDate)"/>
+						<mx:DateField id="beginMakeDate"
+									  width="50%"
+									  enabled="{chkMakeDate.selected}"
+									  formatString="YYYY-MM-DD"
+									  enterFrame="{beginMakeDate.selectedDate==null?beginMakeDate.selectedDate=new Date():beginMakeDate.selectedDate}"
+									  selectableRange="{{rangeEnd:endMakeDate.selectedDate}}"
+									  showToday="true"
+									  keyUp="toNextControl(event,endMakeDate)"/>
+						<mx:FormItem label="-"
+									 labelWidth="10"
+									 width="50%"
+									 horizontalGap="0">
+							<mx:DateField id="endMakeDate"
+										  width="100%"
+										  enabled="{chkMakeDate.selected}"
+										  formatString="YYYY-MM-DD"
+										  enterFrame="{endMakeDate.selectedDate==null?endMakeDate.selectedDate=new Date():endMakeDate.selectedDate}"
+										  selectableRange="{{rangeStart:beginMakeDate.selectedDate, rangeEnd:new Date()}}"
+										  showToday="true"/>
+						</mx:FormItem>
+					</mx:FormItem>
+				</s:HGroup>
+			</s:VGroup>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+	<s:HGroup width="100%"
+			  height="31"
+			  horizontalAlign="right"
+			  verticalAlign="middle"
+			  gap="5">
+		<mx:LinkButton id="btConfirm"
+					   icon="@Embed('/assets/images/button/confirm20.png')"
+					   label=" 确 定 "
+					   skin="mx.skins.halo.ButtonSkin"
+					   height="26"
+					   click="btConfirm_clickHandler(event)"/>
+		<mx:LinkButton id="btReturn"
+					   height="26"
+					   label=" 取 消"
+					   click="btReturn_clickHandler(event)"
+					   skin="mx.skins.halo.ButtonSkin"
+					   icon="@Embed(source='assets/images/button/return20.png')"/>
+	</s:HGroup>
+</s:TitleWindow>

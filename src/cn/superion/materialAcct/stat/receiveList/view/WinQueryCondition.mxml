@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	 入库报告单列表模块  查询窗体
+	 author:周作建  2011.06.01
+	 modify:吴小娟  2011.06.10
+	 checked by
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="500"
+			   height="400"
+			   backgroundColor="0xE2E8E8"
+			   title="入库报告单查询"
+			   close="closeWin()"
+			   creationComplete="doInit()"
+			   xmlns:controls="cn.superion.base.components.controls.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+		]]>
+	</fx:Script>
+
+	<fx:Script source="WinQueryConditionas.as"/>
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10"
+						  paddingRight="10"
+						  paddingTop="10"/>
+	</s:layout>
+	<!-- 查询条件区 -->
+	<mx:TabNavigator width="478"
+					 height="310"
+					 paddingBottom="15"
+					 paddingTop="15"
+					 paddingLeft="15"
+					 paddingRight="15"
+					 backgroundColor="0xE2E8E8">
+		<s:NavigatorContent width="450"
+							height="361"
+							label="查询条件">
+			<s:VGroup id="receiveOtherQuery"
+					  width="100%"
+					  height="348">
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="仓库"
+							 width="108"/>
+					<s:ComboBox id="storageCode"
+								width="100%"
+								height="25"
+								labelField="storageName"
+								keyUp="toNextControl(event,salerCode)"/>
+
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="供应单位"
+							 width="108"/>
+					<controls:TextInputIcon id="salerCode"
+											width="100%"
+											keyDown="toNextControl(event,chkInvoiceDate)"
+											queryIconClick="salerCode_queryIconClickHandler(event)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="入库号"
+							 width="108"/>
+					<s:TextInput id="beginRdBillNo"
+											width="50%"/>
+					<s:Label text="至"/>
+					<s:TextInput id="endRdBillNo"
+								 width="50%"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:CheckBox id="chkInvoiceDate"
+								label="发票日期"
+								width="108"
+								keyUp="toNextControl(event,beginInvoiceDate)"/>
+					<mx:DateField id="beginInvoiceDate"
+								  width="50%"
+								  enabled="{chkInvoiceDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{beginInvoiceDate.selectedDate==null?beginInvoiceDate.selectedDate=new Date():beginInvoiceDate.selectedDate}"
+								  selectableRange="{{rangeEnd:endInvoiceDate.selectedDate}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,endInvoiceDate)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<mx:DateField id="endInvoiceDate"
+								  width="50%"
+								  enabled="{chkInvoiceDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{endInvoiceDate.selectedDate==null?endInvoiceDate.selectedDate=new Date():endInvoiceDate.selectedDate}"
+								  selectableRange="{{rangeStart:beginInvoiceDate.selectedDate, rangeEnd:new Date()}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,chkBillDate1)"/>
+				</s:HGroup>
+
+
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:CheckBox id="chkBillDate1"
+								label="单据起始日期"
+								width="108"
+								keyUp="toNextControl(event,beginBillDate1)"/>
+					<mx:DateField id="beginBillDate1"
+								  width="50%"
+								  enabled="{chkBillDate1.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{beginBillDate1.selectedDate==null?beginBillDate1.selectedDate=new Date():beginBillDate1.selectedDate}"
+								  selectableRange="{{rangeEnd:endBillDate1.selectedDate}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,endBillDate1)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<mx:DateField id="endBillDate1"
+								  width="50%"
+								  enabled="{chkBillDate1.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{endBillDate1.selectedDate==null?endBillDate1.selectedDate=new Date():endBillDate1.selectedDate}"
+								  selectableRange="{{rangeStart:beginBillDate1.selectedDate, rangeEnd:new Date()}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,chkBillDate2)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:CheckBox id="chkBillDate2"
+								label="单据终止日期"
+								width="108"
+								keyUp="toNextControl(event,beginBillDate2)"/>
+					<mx:DateField id="beginBillDate2"
+								  width="50%"
+								  enabled="{chkBillDate2.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{beginBillDate2.selectedDate==null?beginBillDate2.selectedDate=new Date():beginBillDate2.selectedDate}"
+								  selectableRange="{{rangeEnd:endBillDate2.selectedDate}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,endBillDate2)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<mx:DateField id="endBillDate2"
+								  width="50%"
+								  enabled="{chkBillDate2.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{endBillDate2.selectedDate==null?endBillDate2.selectedDate=new Date():endBillDate2.selectedDate}"
+								  selectableRange="{{rangeStart:beginBillDate2.selectedDate, rangeEnd:new Date()}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,accounter)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="核算人"
+							 width="108"/>
+					<controls:TextInputIcon id="accounter"
+											width="100%"
+											maxChars="20"
+						queryIconClick="accounter_queryIconClickHandler(event)"
+											keyUp="toNextControl(event,chkAccountDate)"/>
+				</s:HGroup>
+
+
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:CheckBox id="chkAccountDate"
+								label="核算日期"
+								width="108"
+								keyUp="toNextControl(event,beginAccountDate)"/>
+					<mx:DateField id="beginAccountDate"
+								  width="50%"
+								  enabled="{chkAccountDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{beginAccountDate.selectedDate==null?beginAccountDate.selectedDate=new Date():beginAccountDate.selectedDate}"
+								  selectableRange="{{rangeEnd:endAccountDate.selectedDate}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,endAccountDate)"/>
+					<s:Label text="-"
+							 width="8"/>
+					<mx:DateField id="endAccountDate"
+								  width="50%"
+								  enabled="{chkAccountDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  enterFrame="{endAccountDate.selectedDate==null?endAccountDate.selectedDate=new Date():endAccountDate.selectedDate}"
+								  selectableRange="{{rangeStart:beginAccountDate.selectedDate, rangeEnd:new Date()}}"
+								  showToday="true"
+								  keyUp="toNextControl(event,isGive)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle">
+					<s:Label text="是否赠送"
+							 width="108"/>
+					<s:ComboBox id="isGive"
+								width="100%"
+								height="25"
+								requireSelection="true"
+								selectedIndex="0"
+								labelField="giveName"
+								dataProvider="{new ArrayCollection([{giveCode:'',giveName:'全部'},{giveCode:'1',giveName:'赠送'},{giveCode:'0',giveName:'非赠送'}])}"
+								keyUp="toNextControl(event,btConfirm)"/>
+					
+				</s:HGroup>
+			</s:VGroup>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+	<s:HGroup width="100%"
+			  height="31"
+			  horizontalAlign="right"
+			  verticalAlign="middle"
+			  gap="5">
+		<mx:LinkButton id="btConfirm"
+					   icon="@Embed('/assets/images/button/confirm20.png')"
+					   label=" 确 定 "
+					   skin="mx.skins.halo.ButtonSkin"
+					   height="26"
+					   click="btConfirm_clickHandler()"
+					   keyUp="btConfirm_keyUpHandler(event)"/>
+		<mx:LinkButton id="btReturn"
+					   height="26"
+					   label=" 取 消"
+					   skin="mx.skins.halo.ButtonSkin"
+					   icon="@Embed(source='assets/images/button/return20.png')"
+					   click="btReturn_clickHandler(event)"/>
+	</s:HGroup>
+</s:TitleWindow>

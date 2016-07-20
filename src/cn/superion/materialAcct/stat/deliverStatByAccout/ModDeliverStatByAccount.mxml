@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:s="library://ns.adobe.com/flex/spark"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   layout="vertical"
+		   height="100%"
+		   width="100%"
+		   horizontalScrollPolicy="auto"
+		   backgroundColor="#E2E8E8"
+		   xmlns:controls="cn.superion.base.components.controls.*"
+		   creationComplete="doInit()"
+		   xmlns:util="cn.superion.materialAcct.util.*">
+	<fx:Script source="ModDeliverStatAccountas.as"/>
+	<s:Scroller id="scrol"
+				width="100%"
+				height="100%">
+		<s:VGroup id="vg"
+				  gap="0"
+				  height="100%"
+				  width="100%">
+			<util:MainToolBar id="tbarMain"
+							  width="100%"
+							  expClick="toolBar_expClickHandler(event)"
+							  printClick="toolBar_printClickHandler(event)"
+							  queryClick="tbarMain_queryClickHandler(event)"
+							  exitClick="tbarMain_exitClickHandler(event)"/>
+			<controls:BarSubTitle title="会计科目分类汇总"
+								  height="28"/>
+			<s:BorderContainer id="bord"
+							   width="100%"
+							   height="100%"
+							   backgroundColor="#E2E8E8">
+				<s:layout>
+					<s:VerticalLayout verticalAlign="top"
+									  paddingLeft="5"
+									  paddingTop="5"
+									  paddingRight="5"
+									  paddingBottom="5"/>
+				</s:layout>
+				<s:HGroup paddingLeft="10"
+						  verticalAlign="middle">
+					<s:Label text="申请部门："
+							 fontSize="14"/>
+					<s:TextInput id="deptName"
+								 editable="false"
+								 width="400"/>
+				</s:HGroup>
+				<controls:SuperAdvancedDataGrid id="gridAntibacterialList1"
+												width="100%"
+												height="100%"
+												styleName="dataGrid"
+												borderVisible="false"
+												headerSortSeparatorSkin="mx.skins.ProgrammaticSkin"
+												horizontalScrollPolicy="auto"
+												verticalScrollPolicy="auto"
+												sumLableField="deptCode"
+												sumRowLabelText="合计"
+												colorWhereColor="0x0000ff">
+					<controls:groupedColumns>
+						<mx:AdvancedDataGridColumn headerText="所属单位"
+												   width="90"
+												   textAlign="left"
+												   labelFunction="labFun"
+												   dataField="deptUnitsCode"/>
+						<mx:AdvancedDataGridColumn headerText="部门"
+												   width="120"
+												   labelFunction="labFun"
+												   textAlign="left"
+												   dataField="deptCode"/>
+						<mx:AdvancedDataGridColumnGroup headerText="放射材料费">
+							<mx:AdvancedDataGridColumn headerText="单独计价"
+													   width="90"
+													   textAlign="right"
+													   dataField="charge9"/>
+							<mx:AdvancedDataGridColumn headerText="非单独计价"
+													   width="110"
+													   textAlign="right"
+													   dataField="charge10"/>
+						</mx:AdvancedDataGridColumnGroup>
+						<mx:AdvancedDataGridColumnGroup headerText="化验材料费">
+							<mx:AdvancedDataGridColumn headerText="单独计价"
+													   width="90"
+													   textAlign="right"
+													   dataField="charge1"/>
+							<mx:AdvancedDataGridColumn headerText="非单独计价"
+													   width="110"
+													   textAlign="right"
+													   dataField="charge2"/>
+						</mx:AdvancedDataGridColumnGroup>
+						<mx:AdvancedDataGridColumnGroup headerText="植入耗材（骨科）费">
+							<mx:AdvancedDataGridColumn headerText="单独计价"
+													   width="90"
+													   textAlign="right"
+													   dataField="charge3"/>
+							<mx:AdvancedDataGridColumn headerText="非单独计价"
+													   width="110"
+													   textAlign="right"
+													   dataField="charge4"/>
+						</mx:AdvancedDataGridColumnGroup>
+						<mx:AdvancedDataGridColumnGroup headerText="介入耗材费">
+							<mx:AdvancedDataGridColumn headerText="单独计价"
+													   width="90"
+													   textAlign="right"
+													   dataField="charge5"/>
+							<mx:AdvancedDataGridColumn headerText="非单独计价"
+													   width="110"
+													   textAlign="right"
+													   dataField="charge6"/>
+						</mx:AdvancedDataGridColumnGroup>
+						<mx:AdvancedDataGridColumnGroup headerText="其他卫生材料费">
+							<mx:AdvancedDataGridColumn headerText="单独计价"
+													   width="90"
+													   textAlign="right"
+													   dataField="charge7"/>
+							<mx:AdvancedDataGridColumn headerText="非单独计价"
+													   width="110"
+													   textAlign="right"
+													   dataField="charge8"/>
+						</mx:AdvancedDataGridColumnGroup>
+					</controls:groupedColumns>
+				</controls:SuperAdvancedDataGrid>
+
+
+
+			</s:BorderContainer>
+
+		</s:VGroup>
+	</s:Scroller>
+</mx:Module>

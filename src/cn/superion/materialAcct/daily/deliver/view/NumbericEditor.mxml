@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TextInput xmlns:fx="http://ns.adobe.com/mxml/2009"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  restrict="0-9//."
+			  keyDown="textinput1_keyDownHandler(event)"
+			  creationComplete="textinput1_creationCompleteHandler(event)"
+			  change="textinput1_changeHandler(event)"
+			  maxChars="10">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.DataGrid;
+			import mx.events.FlexEvent;
+			
+			protected function textinput1_changeHandler(event:Event):void
+			{
+				changeValue(event)
+			}
+			
+			protected function changeValue(event:Event):void
+			{
+				var dataField:String=event.currentTarget.listData.dataField;
+				this.text=this.text.replace(/\,/g, '');
+				data[dataField]=parseFloat(this.text);
+				data[dataField]=isNaN(data[dataField]) ? 0 : data[dataField];
+				data.tradeMoney=data.tradePrice1 * data.acctAmount1;
+				if(dataField == 'acctAmount1'){
+					data.acctAmount = parseFloat(this.text) * data.amountPerPackage;
+					if(data.acctAmount != data.amountPerPackage * parseFloat(this.text))
+					{
+						this.setStyle('borderColor','red')
+					}else
+					{
+						this.setStyle('borderColor','black')
+					}
+				}
+				if(dataField == 'tradePrice1'){
+					if(data.tradePrice1 != data.amountPerPackage * data.wholeSalePrice)
+					{
+						this.setStyle('borderColor','red')
+					}else
+					{
+						this.setStyle('borderColor','black')
+					}
+				}
+				DataGrid(this.owner).invalidateList();
+			}
+			
+			protected function textinput1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if (data.notData)
+				{
+					this.visible=false;
+					this.enabled=false;
+					this.width=0
+					this.height=0
+					return;
+				}				
+				changeValue(event)
+			}
+			
+			protected function textinput1_keyDownHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+		]]>
+	</fx:Script>
+</mx:TextInput>
+

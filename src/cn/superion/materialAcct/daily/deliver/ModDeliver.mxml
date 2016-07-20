@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:s="library://ns.adobe.com/flex/spark"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   layout="vertical"
+		   height="100%"
+		   width="100%"
+		   horizontalScrollPolicy="auto"
+		   backgroundColor="#E2E8E8"
+		   xmlns:controls="cn.superion.base.components.controls.*"
+		   creationComplete="doInit()"
+		   xmlns:util="cn.superion.materialAcct.util.*">
+	<fx:Script>
+		<![CDATA[
+			import cn.superion.base.components.controls.CheckBoxIR;
+
+		
+
+		]]>
+	</fx:Script>
+	<fx:Script source="ModDeliveras.as"/>
+	<s:Scroller id="scrol"
+				width="100%"
+				height="100%">
+		<s:VGroup id="vg"
+				  gap="0"
+				  height="100%"
+				  width="100%">
+			<fx:Script>
+				<![CDATA[
+					import mx.events.DataGridEvent;
+				]]>
+			</fx:Script>
+			<util:ToolBar id="toolBar"
+						  width="100%"
+						  printClick="toolBar_printClickHandler(event)"
+						  expClick="toolBar_expClickHandler(event)"
+						  saveClick="toolBar_saveClickHandler(event)"
+						  cancelClick="toolBar_cancelClickHandler(event)"
+						  queryClick="toolBar_queryClickHandler(event)"
+						  exitClick="toolBar_exitClickHandler(event)"/>
+			<controls:BarSubTitle title="填写发票"
+								  height="28"/>
+			<s:BorderContainer id="bord"
+							   width="100%"
+							   height="38"
+							   backgroundColor="#E2E8E8">
+				<s:layout>
+					<s:VerticalLayout verticalAlign="top"
+									  paddingLeft="5"
+									  paddingTop="5"
+									  paddingRight="5"
+									  paddingBottom="5"/>
+				</s:layout>
+				<s:HGroup id="hg1"
+						  width="100%"
+						  verticalAlign="middle">
+					<mx:HBox width="221"
+							 verticalAlign="middle"
+							 styleName="requiredFormItem">
+						<s:Label text="仓库"/>
+						<s:ComboBox id="storageCode"
+									width="100%"
+									height="25"
+									color="#000000"
+									labelField="storageName"
+									keyUp="toNextCtrl(event,salerCode)"/>
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle">
+						<s:CheckBox id="isGive" visible="false" includeInLayout="false"
+									label="是否为赠送耗材"/>	
+					</mx:HBox>
+					<mx:HBox width="345"
+							 verticalAlign="middle"
+							 styleName="requiredFormItem">
+						<s:Label text="供应单位"/>
+						<controls:TextInputIcon id="salerCode"
+												width="100%"
+												color="#000000"
+												queryIconClick="salerCode_queryIconClickHandler(event)"
+												keyUp="toNextCtrl(event,beginBillDate)"/>
+					</mx:HBox>
+					
+					<mx:HBox width="359"
+							 verticalAlign="middle"
+							 styleName="requiredFormItem">
+						<s:Label text="入库日期"/>
+						<mx:DateField id="beginBillDate"
+									  width="100%"
+									  height="25"
+									  formatString="YYYY-MM-DD"
+									  showToday="true"
+									  color="#000000"
+									  enterFrame="{beginBillDate.selectedDate==null?beginBillDate.selectedDate=new Date():beginBillDate.selectedDate}"
+									  selectableRange="{{rangeEnd:endBillDate.selectedDate}}"
+									  keyUp="toNextCtrl(event,endBillDate)"/>
+						<s:Label text="-"
+								 color="#0000FF"/>
+						<mx:DateField id="endBillDate"
+									  width="100%"
+									  height="25"
+									  formatString="YYYY-MM-DD"
+									  showToday="true"
+									  color="#000000"
+									  enterFrame="{endBillDate.selectedDate==null?endBillDate.selectedDate=new Date():endBillDate.selectedDate}"
+									  selectableRange="{{rangeStart:beginBillDate.selectedDate, rangeEnd:new Date()}}"/>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:LinkButton label="全选" 
+									   height="35"
+									   id="btselect"
+									   click="btselect_clickHandler(event)"
+									   icon="@Embed(source='assets/images/titlebars/save16_function.png')"
+									   disabledIcon="@Embed(source='assets/images/titlebars/save16_function_disabled.png')"/>
+						<mx:LinkButton label="全不选" 
+									   height="35"
+									   id="btNotselect"
+									   click="btNotselect_clickHandler(event)"
+									   icon="@Embed(source='assets/images/titlebars/save16_function.png')"
+									   disabledIcon="@Embed(source='assets/images/titlebars/save16_function_disabled.png')"/>
+					</mx:HBox>
+				</s:HGroup>
+			</s:BorderContainer> 
+			
+			<controls:SuperDataGrid id="gdItems"
+									width="100%"
+									height="100%"
+									styleName="dataGrid"
+									editable="false"
+									colorWhereField="currentStatus"
+									colorWhereValue="2"
+									colorWhereColor="0xFF0000"
+									sumField="{['wholeSaleMoney','amount','acctAmount','tradeMoney','inviteMoney','retailMoney']}"
+									sumLableField="rowNo"
+									sumRowLabelText="合计"
+									horizontalScrollPolicy="on"
+									format="{[,,,,,,'0.00',,'0.00','0.00','0.00','0.00','0.00','0.00',,,'0.00','0.00','0.00','0.00','0.00','0.00','0.00']}">
+				<controls:columns>
+					<mx:DataGridColumn headerText="选择"
+									   width="1" 
+									   textAlign="center" 
+									   editable="false"
+									   itemRenderer="cn.superion.materialAcct.daily.receive.view.RendererCheckBox"/>
+					<mx:DataGridColumn dataField="rowNo"
+									   headerText="序号"
+									   labelFunction="labFunRowNo"
+									   width="40"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="materialCode"
+									   headerText="物资编码"
+									   width="110"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="materialName"
+									   headerText="物资名称"
+									   width="150"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="invoiceNo"
+									   headerText="发票号"
+									   width="110"
+									   textAlign="left"
+									   color="#0000FF"
+									   editable="{!isGive.selected}"/>
+					<mx:DataGridColumn dataField="personName"
+									   headerText="病人姓名"
+									   width="120"
+									   visible="false"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="wholeSaleMoney"
+									   headerText="批发价金额"
+									   width="100"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="materialSpec"
+									   headerText="规格型号"
+									   width="90"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="packageUnits"
+									   headerText="单位"
+									   width="50"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="packageAmount"
+									   headerText="数量"
+									   width="80"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="acctAmount1"
+									   headerText="票面数量"
+									   width="80"
+									   textAlign="right"
+									   color="#0000FF"
+									   editable="true"
+									   itemEditor="{new ClassFactory(NumbericEditor)} "
+									   editorDataField="text"/>
+					<mx:DataGridColumn dataField="acctAmount"
+									   width="0"
+									   visible="false"/>
+					<mx:DataGridColumn dataField="wholeSalePrice"
+									   headerText="批发价"
+									   width="80"
+									   labelFunction="wholeSalePriceLBF"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="tradePrice1"
+									   headerText="进价"
+									   width="80"
+									   textAlign="right"
+									   color="#0000FF"
+									   editable="true"
+									   itemEditor="{new ClassFactory(NumbericEditor)} "
+									   editorDataField="text"/>
+					<mx:DataGridColumn dataField="tradePrice"
+									   width="0"
+									   visible="false"/>
+					<mx:DataGridColumn dataField="invoiceDate"
+									   headerText="发票日期"
+									   width="110"
+									   textAlign="left" 
+									   editorDataField="selectedDate"
+									   color="#0000FF"
+									   itemEditor="{new ClassFactory(DateFieldTextEditor)} "
+									   editable="false" />
+					<mx:DataGridColumn dataField="patientId"
+									   headerText="住院号"
+									   width="100"
+									   visible="false"
+									   textAlign="left"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="tradeMoney"
+									   headerText="进价金额"
+									   width="80"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="invitePrice"
+									   headerText="中标价"
+									   width="80"
+									   labelFunction="invitePriceLBF"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="inviteMoney"
+									   headerText="中标价金额"
+									   width="100"
+									   visible="false"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="retailPrice"
+									   headerText="零售价"
+									   width="80"
+									   visible="false"
+									   labelFunction="retailPriceLBF"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="retailMoney"
+									   headerText="零售价金额"
+									   width="100"
+									   visible="false"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="sumMoney"
+									   headerText="合计金额"
+									   width="100"
+									   visible="false"
+									   textAlign="right"
+									   editable="false"/>
+					<mx:DataGridColumn dataField="factoryName"
+									   headerText="生产厂家"
+									   width="180"
+									   visible="false"
+									   textAlign="left"
+									   editable="false"/>
+				</controls:columns>
+			</controls:SuperDataGrid>
+		</s:VGroup>
+	</s:Scroller>
+</mx:Module>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    高值现存量查询模块
+    author: 芮玉红  2012.11.29
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:controls="cn.superion.base.components.controls.*"
+			   width="500"
+			   height="330"
+			   backgroundColor="0xE2E8E8"
+			   title="高值现存量查询"
+			   close="closeWin()"
+			   creationComplete="doInit()">
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10"
+						  paddingRight="10"
+						  paddingTop="10"/>
+	</s:layout>
+	
+	<fx:Script source="WinQueryConditionas.as"/>
+	
+	<fx:Declarations>
+		<mx:NumberValidator id="minStockAmountValid"
+							source="{minStockAmount}"
+							property="text"
+							required="false"
+							domain="real"
+							precision="2"
+							precisionError="小数点后最多只能有2位数字"
+							maxValue="9999999999.99"
+							exceedsMaxError="输入的值太大,不得超过最大值9999999999.99"/>
+		<mx:NumberValidator id="maxStockAmountValid"
+							source="{maxStockAmount}"
+							property="text"
+							required="false"
+							domain="real"
+							precision="2"
+							precisionError="小数点后最多只能有2位数字"
+							maxValue="9999999999.99"
+							exceedsMaxError="输入的值太大,不得超过最大值9999999999.99"/>
+	</fx:Declarations>
+	
+	<!-- 查询条件区 -->
+	<mx:TabNavigator width="100%"
+					 height="100%"
+					 paddingBottom="15"
+					 paddingTop="15"
+					 paddingLeft="15"
+					 paddingRight="15"
+					 backgroundColor="0xE2E8E8">
+		<s:NavigatorContent width="100%"
+							height="100%"
+							label="查询条件">
+			<s:VGroup id="queryArea"
+					  width="100%"
+					  height="100%">
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:Label text="科   室"
+							 width="75"/>
+					<controls:TextInputIcon id="storageCode"
+											width="100%"
+											queryIconClick="deptCode_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,materialClass)"/>
+					
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:Label text="物资分类"
+							 width="75"/>
+					<controls:TextInputIcon id="materialClass"
+											width="100%"
+											queryIconClick="materialClass_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,materialCode)"/>
+					
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:Label text="物资编码"
+							 width="75"/>
+					<mx:TextInput id="materialCode"
+								  width="100%"
+								  restrict="0-9"
+								  keyUp="toNextControl(event,materialName)"/>
+				</s:HGroup>
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:Label text="物资名称"
+							 width="75"/>
+					<controls:TextInputIcon id="materialName"
+											width="100%"
+											queryIconClick="materialName_queryIconClickHandler(event)"
+											keyUp="queryIcon_keyUpHandler(event,minStockAmount)"/>
+				</s:HGroup>
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:Label text="现 存 量"
+							 width="75"/>
+					<mx:TextInput id="minStockAmount"
+								  width="100%"
+								  restrict="0-9\.\-"
+								  textAlign="right"
+								  keyUp="toNextControl(event,maxStockAmount)"/>
+					<s:Label text="-"/>
+					<mx:TextInput id="maxStockAmount"
+								  width="100%"
+								  restrict="0-9\.\-"
+								  textAlign="right"
+								  keyUp="toNextControl(event,availDate)"/>
+				</s:HGroup>
+				
+				<s:HGroup width="100%"
+						  verticalAlign="middle"
+						  paddingTop="3">
+					<s:CheckBox id="availDate"
+								label="有效期限"
+								width="75"
+								keyUp="toNextControl(event,beginAvailDate)"/>
+					<mx:DateField id="beginAvailDate"
+								  width="100%"
+								  enabled="{availDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  editable="true"
+								  selectedDate="{beginAvailDate.selectedDate==null?beginAvailDate.selectedDate=new Date():beginAvailDate.selectedDate}"
+								  selectableRange="{{rangeEnd:endAvailDate.selectedDate}}"
+								  keyUp="toNextControl(event,endAvailDate)"/>
+					<s:Label text="-"/>
+					<mx:DateField width="100%"
+								  id="endAvailDate"
+								  enabled="{availDate.selected}"
+								  formatString="YYYY-MM-DD"
+								  editable="true"
+								  selectedDate="{endAvailDate.selectedDate==null?endAvailDate.selectedDate=new Date():endAvailDate.selectedDate}"
+								  selectableRange="{{rangeStart:beginAvailDate.selectedDate}}"
+								  keyUp="toNextControl(event,btQuery)"/>
+				</s:HGroup>
+			</s:VGroup>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+	
+	<s:HGroup width="100%"
+			  height="31"
+			  horizontalAlign="right"
+			  verticalAlign="middle">
+		<mx:LinkButton id="btQuery"
+					   height="26"
+					   label=" 确 定"
+					   skin="mx.skins.halo.ButtonSkin"
+					   icon="@Embed(source='assets/images/button/confirm20.png')"
+					   click="btQuery_clickHandler()"/>
+		<mx:LinkButton id="btReturn"
+					   height="26"
+					   label=" 取 消"
+					   skin="mx.skins.halo.ButtonSkin"
+					   icon="@Embed(source='assets/images/button/return20.png')"
+					   click="closeWin()"/>
+	</s:HGroup>
+</s:TitleWindow>
